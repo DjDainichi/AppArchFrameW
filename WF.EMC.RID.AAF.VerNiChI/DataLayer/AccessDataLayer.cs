@@ -85,17 +85,41 @@ namespace DataLayer
         public static List<String> ExecuteQuery(string connectionString, string storedProcedure,
             params SqlParameter[] paramaters)
         {
+            //List<T>
             var queryResults = new List<string>();
             try
             {
                 var sqlConnFirSqlConnection = new SqlConnection();
+                
+                 var sqlCmd = new SqlCommand
+                {
+                    CommandText = storedProcedure.ToString(),
+                    CommandType = CommandType.StoredProcedure,
+                    Connection = sqlConnFirSqlConnection,
+                    CommandTimeout = 30000
+                };
+
+                //todo do more research on params keyword
+                if (paramaters != null) sqlCmd.Parameters.AddRange((Array)paramaters);
+                
+                sqlConnFirSqlConnection.Open();
+                var sqlReader = sqlCmd.ExecuteReader();
+
+                // Data should be accessable through the SqlDataReader obj here -->
+               
+                //todo go over this line with Johnny
+                while (sqlReader.Read()) queryResults.Add(sqlReader["RoleName"].ToString());
+                
+                sqlCmd.Parameters.Clear();
+                sqlConnFirSqlConnection.Close();
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                throw;
+                throw new Exception(e.Message, e);
+                
             }
-            return null;
+            return queryResults;;
             
         }
 
