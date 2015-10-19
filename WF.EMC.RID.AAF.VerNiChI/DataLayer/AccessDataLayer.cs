@@ -91,6 +91,7 @@ namespace DataLayer
             {
                 var sqlConnFirSqlConnection = new SqlConnection();
                 
+                //obj initization syntax
                  var sqlCmd = new SqlCommand
                 {
                     CommandText = storedProcedure.ToString(),
@@ -113,12 +114,8 @@ namespace DataLayer
                 sqlCmd.Parameters.Clear();
                 sqlConnFirSqlConnection.Close();
             }
-            catch (Exception e)
-            {
+            catch (Exception e){ throw new Exception(e.Message, e);}
 
-                throw new Exception(e.Message, e);
-                
-            }
             return queryResults;;
             
         }
@@ -129,10 +126,35 @@ namespace DataLayer
         /// <summary>
         /// d[C#]b-- 
         /// </summary>
-        public static int ExecuteNonQueryWithParams(string connectionStrings, string storedProcedures,
+        public static int ExecuteNonQueryWithParams(string connStringPassedIn, string sProcPassedIn,
             CommandType commandType, params SqlParameter[] parameters)
         {
-            return 0;
+            //declaring return variable;
+            int rowsAffected;
+
+            //using == disposable newing up SqlConn dt passing it connString paramater
+            using (var sqlConn = new SqlConnection(connStringPassedIn))
+            {
+                //using == disposable newing up SqlCmd dt passing it pProc parameter & a valid sqlConn obj
+                using (var sqlCommand = new SqlCommand(sProcPassedIn, sqlConn))
+                {
+                   //setting timeout to 30 sec
+                    sqlCommand.CommandTimeout = 30000;
+
+                    //todo go over this line of code with Johnny how is propper formatting of values ensured Array of Parameters validated?
+                    if (parameters != null) sqlCommand.Parameters.AddRange((Array) parameters);
+                    try
+                    {
+                        sqlConn.Open();
+                        rowsAffected = sqlCommand.ExecuteNonQuery();
+                    }
+                    catch (Exception db) { throw new Exception(db.Message, db); }
+
+                    finally { sqlCommand.Parameters.Clear(); }
+                    
+                }   
+            }
+            return rowsAffected;
         }
 
         #endregion
