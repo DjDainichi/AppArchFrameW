@@ -1,1 +1,3 @@
+
+Formated repository for faster access in git
 /c/Users/Developer/Documents/Visual Studio 2013/Projects/JessieLibertyWPF/HelloWPF/WF.EMC.RID.AAF.NichiVer
