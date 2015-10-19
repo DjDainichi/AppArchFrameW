@@ -1,0 +1,1 @@
+C:\Users\Developer\Documents\Visual Studio 2013\Projects\JessieLibertyWPF\HelloWPF\WF.EMC.RID.AAF.NichiVer\WF.EMC.RID.AAF.VerNiChI\WF.EMC.RID.AAF.VerNiChI\bin\Debug\WF.EMC.RID.AAF.VerNiChI.exe.config
